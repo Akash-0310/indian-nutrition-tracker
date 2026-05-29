@@ -1,0 +1,8 @@
+{
+  "short_name": "ThaliTrack",
+  "name": "ThaliTrack — Indian Food Calorie Tracker",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#f97316",
+  "background_color": "#fff7ed"
+}

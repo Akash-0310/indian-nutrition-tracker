@@ -1,0 +1,14 @@
+{
+  "name": "indian-nutrition-tracker",
+  "version": "1.0.0",
+  "description": "ThaliTrack - Calorie & Nutrition Tracker for Indian Food",
+  "scripts": {
+    "client": "cd client && npm start",
+    "server": "cd server && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "install-all": "cd server && npm install && cd ../client && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
