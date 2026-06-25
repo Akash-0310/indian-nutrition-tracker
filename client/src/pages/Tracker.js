@@ -43,6 +43,15 @@ export default function Tracker() {
   const [modalFood, setModalFood] = useState(null);
   const [modalQty, setModalQty] = useState(1);
   const [modalMeal, setModalMeal] = useState('lunch');
+  // Raw text of the daily-target field, so the user can type freely.
+  // The numeric `target` is only committed (and clamped) on blur / Enter.
+  const [targetInput, setTargetInput] = useState(() => String(target));
+
+  const commitTarget = () => {
+    const clamped = Math.max(800, Math.min(5000, Number(targetInput) || 2000));
+    setTarget(clamped);
+    setTargetInput(String(clamped));
+  };
 
   useEffect(() => {
     localStorage.setItem(ENTRIES_KEY, JSON.stringify(entries));
@@ -331,8 +340,19 @@ export default function Tracker() {
                 min={800}
                 max={5000}
                 step={50}
-                value={target}
-                onChange={(e) => setTarget(Math.max(800, Math.min(5000, Number(e.target.value) || 2000)))}
+                value={targetInput}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  setTargetInput(v);
+                  // Live recalc: update the ring/remaining as soon as a valid
+                  // number is typed. Range-clamping is deferred to onBlur.
+                  const n = Number(v);
+                  if (v !== '' && !Number.isNaN(n)) setTarget(n);
+                }}
+                onBlur={commitTarget}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') e.currentTarget.blur();
+                }}
               />
             </div>
 
