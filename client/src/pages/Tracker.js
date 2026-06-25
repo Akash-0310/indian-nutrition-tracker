@@ -28,7 +28,18 @@ export default function Tracker() {
   const [target, setTarget] = useState(() => Number(localStorage.getItem(TARGET_KEY)) || 2000);
   const [activeDate, setActiveDate] = useState(todayKey());
   const [search, setSearch] = useState('');
-  const [category, setCategory] = useState('all');
+  // Multi-select category filter. Empty set = "All" (no category restriction).
+  const [categories, setCategories] = useState([]);
+
+  const toggleCategory = (id) => {
+    if (id === 'all') {
+      setCategories([]);
+      return;
+    }
+    setCategories((prev) =>
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
+    );
+  };
   const [modalFood, setModalFood] = useState(null);
   const [modalQty, setModalQty] = useState(1);
   const [modalMeal, setModalMeal] = useState('lunch');
@@ -44,11 +55,11 @@ export default function Tracker() {
   const filteredFoods = useMemo(() => {
     const q = search.trim().toLowerCase();
     return FOODS.filter((f) => {
-      if (category !== 'all' && f.category !== category) return false;
+      if (categories.length > 0 && !categories.includes(f.category)) return false;
       if (!q) return true;
       return f.name.toLowerCase().includes(q);
     });
-  }, [search, category]);
+  }, [search, categories]);
 
   const todaysEntries = useMemo(
     () => entries.filter((e) => e.date === activeDate),
@@ -194,15 +205,20 @@ export default function Tracker() {
             </div>
 
             <div className="category-pills">
-              {CATEGORIES.map((c) => (
-                <button
-                  key={c.id}
-                  className={category === c.id ? 'active' : ''}
-                  onClick={() => setCategory(c.id)}
-                >
-                  {c.emoji} {c.label}
-                </button>
-              ))}
+              {CATEGORIES.map((c) => {
+                const isActive =
+                  c.id === 'all' ? categories.length === 0 : categories.includes(c.id);
+                return (
+                  <button
+                    key={c.id}
+                    className={isActive ? 'active' : ''}
+                    aria-pressed={isActive}
+                    onClick={() => toggleCategory(c.id)}
+                  >
+                    {c.emoji} {c.label}
+                  </button>
+                );
+              })}
             </div>
 
             {filteredFoods.length > 0 && (
