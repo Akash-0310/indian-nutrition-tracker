@@ -111,6 +111,18 @@ export const ARTICLES = [
         ],
       },
       {
+        heading: 'Eat eggs or meat? Even easier protein wins',
+        paragraphs: ['If you\'re not vegetarian, hitting your protein target gets simpler. Each of these adds a serious chunk to a single meal:'],
+        list: [
+          'Two boiled or bhurji eggs with breakfast — +12g protein',
+          'A 100g chicken breast in your curry instead of aloo — +30g',
+          'Swap one roti for a bowl of chicken keema — +20g',
+          'Add a piece of grilled or tawa fish at dinner — +22g per 100g',
+          'Egg curry (2 eggs) over plain dal once a week — +13g',
+          'A small bowl of chicken shorba before lunch — +10g and very filling',
+        ],
+      },
+      {
         heading: 'Carbs aren\'t the enemy — but watch portions',
         paragraphs: [
           'Indian meals are naturally carb-rich, and that\'s fine for most people. The issue is portion creep: "one small bowl" of rice can easily become 1.5-2 cups, which doubles the carb count.',
