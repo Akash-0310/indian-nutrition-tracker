@@ -45,7 +45,7 @@ export default function Footer() {
             <h4>Track</h4>
             <Link to="/tracker">Daily Tracker</Link>
             <Link to="/resources#meal-plans">Meal Plans</Link>
-            <Link to="/resources#calorie-calc">Calorie Calculator</Link>
+            <Link to="/calorie-calculator">Calorie Calculator</Link>
             <Link to="/resources#macros">Macro Guide</Link>
           </div>
 

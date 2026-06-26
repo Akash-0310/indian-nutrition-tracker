@@ -10,6 +10,7 @@ import Resources from './pages/Resources';
 import Article from './pages/Article';
 import Contact from './pages/Contact';
 import Tracker from './pages/Tracker';
+import CalorieCalculator from './pages/CalorieCalculator';
 import NotFound from './pages/NotFound';
 import './App.css';
 
@@ -22,6 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/tracker" element={<Tracker />} />
+          <Route path="/calorie-calculator" element={<CalorieCalculator />} />
           <Route path="/about" element={<About />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/resources" element={<Resources />} />
