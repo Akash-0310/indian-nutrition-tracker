@@ -1,9 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { FOODS, CATEGORIES, MEALS } from '../data/foodData';
 import useScrollAnimation from '../hooks/useScrollAnimation';
 
 const ENTRIES_KEY = 'tt-entries-v1';
 const TARGET_KEY = 'tt-target-v1';
+// How many dishes to show at first, and how many more to reveal on each
+// "Load more" click or scroll-into-view.
+const PAGE_SIZE = 12;
 
 function todayKey() {
   const d = new Date();
@@ -69,6 +72,25 @@ export default function Tracker() {
       return f.name.toLowerCase().includes(q);
     });
   }, [search, categories]);
+
+  // Progressive disclosure for the dish grid: start with one page, reveal the
+  // next page only when the user clicks "Load more".
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  // Whenever the filter changes the result set, start again from the top.
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [search, categories]);
+
+  const visibleFoods = useMemo(
+    () => filteredFoods.slice(0, visibleCount),
+    [filteredFoods, visibleCount]
+  );
+  const hasMore = visibleCount < filteredFoods.length;
+
+  const loadMore = useCallback(() => {
+    setVisibleCount((c) => Math.min(c + PAGE_SIZE, filteredFoods.length));
+  }, [filteredFoods.length]);
 
   const todaysEntries = useMemo(
     () => entries.filter((e) => e.date === activeDate),
@@ -231,19 +253,28 @@ export default function Tracker() {
             </div>
 
             {filteredFoods.length > 0 && (
-              <div className="food-grid">
-                {filteredFoods.map((f) => (
-                  <button key={f.id} className="food-card" onClick={() => openModal(f)}>
-                    <span className="food-emoji">{f.emoji}</span>
-                    <h4>{f.name}</h4>
-                    <span className="serving">{f.serving}</span>
-                    <span className="cal">
-                      <strong>{f.calories} kcal</strong>
-                      <span>C{f.carbs} P{f.protein} F{f.fat}</span>
-                    </span>
-                  </button>
-                ))}
-              </div>
+              <>
+                <div className="food-grid">
+                  {visibleFoods.map((f) => (
+                    <button key={f.id} className="food-card" onClick={() => openModal(f)}>
+                      <span className="food-emoji">{f.emoji}</span>
+                      <h4>{f.name}</h4>
+                      <span className="serving">{f.serving}</span>
+                      <span className="cal">
+                        <strong>{f.calories} kcal</strong>
+                        <span>C{f.carbs} P{f.protein} F{f.fat}</span>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+                {hasMore && (
+                  <div className="load-more-wrap">
+                    <button type="button" className="btn btn-ghost btn-sm" onClick={loadMore}>
+                      Load more ({filteredFoods.length - visibleCount} left)
+                    </button>
+                  </div>
+                )}
+              </>
             )}
             {filteredFoods.length === 0 && (
               <div className="log-empty">

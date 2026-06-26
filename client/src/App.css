@@ -423,6 +423,11 @@ main { flex: 1; position: relative; }
   gap: 12px;
   margin-bottom: 28px;
 }
+.load-more-wrap {
+  display: flex;
+  justify-content: center;
+  margin: -8px 0 28px;
+}
 .food-card {
   padding: 16px;
   background: var(--surface-strong);
