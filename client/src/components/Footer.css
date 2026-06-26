@@ -70,6 +70,10 @@
   font-size: 1.1rem;
   transition: transform 0.25s ease, background 0.25s ease;
 }
+.socials a svg {
+  width: 20px;
+  height: 20px;
+}
 .socials a:hover {
   transform: translateY(-3px) rotate(-6deg);
   background: var(--gradient-btn);
