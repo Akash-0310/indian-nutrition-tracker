@@ -11,6 +11,8 @@ import Article from './pages/Article';
 import Contact from './pages/Contact';
 import Tracker from './pages/Tracker';
 import CalorieCalculator from './pages/CalorieCalculator';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import NotFound from './pages/NotFound';
 import './App.css';
 
@@ -29,6 +31,8 @@ function App() {
           <Route path="/resources" element={<Resources />} />
           <Route path="/resources/:slug" element={<Article />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

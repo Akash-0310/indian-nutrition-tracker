@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink, Link, useLocation } from 'react-router-dom';
+import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 
 const links = [
@@ -14,9 +15,16 @@ const links = [
 
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
+
+  const onLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -46,6 +54,15 @@ export default function Navbar() {
               {l.label}
             </NavLink>
           ))}
+          {isAuthenticated ? (
+            <button type="button" className="btn btn-ghost btn-sm nav-cta-mobile" onClick={onLogout}>
+              Log out
+            </button>
+          ) : (
+            <Link to="/login" className="btn btn-ghost btn-sm nav-cta-mobile">
+              Sign in
+            </Link>
+          )}
           <Link to="/tracker" className="btn btn-primary btn-sm nav-cta-mobile">
             Start Tracking
           </Link>
@@ -59,6 +76,20 @@ export default function Navbar() {
           >
             <span className={`tgl-icon ${theme}`}>{theme === 'light' ? '🌙' : '☀️'}</span>
           </button>
+          {isAuthenticated ? (
+            <>
+              <span className="nav-user" title={user?.email}>
+                Hi, {user?.name?.split(' ')[0] || 'there'}
+              </span>
+              <button type="button" className="btn btn-ghost btn-sm nav-cta" onClick={onLogout}>
+                Log out
+              </button>
+            </>
+          ) : (
+            <Link to="/login" className="btn btn-ghost btn-sm nav-cta">
+              Sign in
+            </Link>
+          )}
           <Link to="/tracker" className="btn btn-primary btn-sm nav-cta">
             Start Tracking
           </Link>
