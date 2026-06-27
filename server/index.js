@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const contactRoutes = require('./routes/contact');
 const logRoutes = require('./routes/logs');
+const authRoutes = require('./routes/auth');
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ app.use(express.json({ limit: '5mb' }));
 
 connectDB();
 
+app.use('/api/auth', authRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/logs', logRoutes);
 
