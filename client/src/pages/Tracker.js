@@ -224,113 +224,119 @@ export default function Tracker() {
               </div>
             </div>
 
-            <div className="search-wrap">
-              <span className="search-ico">🔍</span>
-              <input
-                type="search"
-                placeholder="Search dosa, dal, biryani, paratha..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                aria-label="Search foods"
-              />
-            </div>
-
-            <div className="category-pills">
-              {CATEGORIES.map((c) => {
-                const isActive =
-                  c.id === 'all' ? categories.length === 0 : categories.includes(c.id);
-                return (
-                  <button
-                    key={c.id}
-                    className={isActive ? 'active' : ''}
-                    aria-pressed={isActive}
-                    onClick={() => toggleCategory(c.id)}
-                  >
-                    {c.emoji} {c.label}
-                  </button>
-                );
-              })}
-            </div>
-
-            {filteredFoods.length > 0 && (
-              <>
-                <div className="food-grid">
-                  {visibleFoods.map((f) => (
-                    <button key={f.id} className="food-card" onClick={() => openModal(f)}>
-                      <span className="food-emoji">{f.emoji}</span>
-                      <h4>{f.name}</h4>
-                      <span className="serving">{f.serving}</span>
-                      <span className="cal">
-                        <strong>{f.calories} kcal</strong>
-                        <span>C{f.carbs} P{f.protein} F{f.fat}</span>
-                      </span>
-                    </button>
-                  ))}
+            {/* YOUR LOG — kept at the top so the day's plate is the first thing
+                you see and reads alongside the calorie ring, instead of being
+                buried below the food catalog. */}
+            <div className="logged-list">
+              {todaysEntries.length === 0 ? (
+                <div className="log-empty">
+                  <div className="big">🍽️</div>
+                  <h3>Empty plate</h3>
+                  <p>Search and tap any dish below to log it. Breakfast counts too.</p>
                 </div>
-                {hasMore && (
-                  <div className="load-more-wrap">
-                    <button type="button" className="btn btn-ghost btn-sm" onClick={loadMore}>
-                      Load more ({filteredFoods.length - visibleCount} left)
-                    </button>
-                  </div>
-                )}
-              </>
-            )}
-            {filteredFoods.length === 0 && (
-              <div className="log-empty">
-                <div className="big">🔎</div>
-                <h3>No matches</h3>
-                <p>Try a different term, or help us add this dish from the contact page.</p>
-              </div>
-            )}
-
-            <h3 style={{ margin: '30px 0 16px', fontFamily: 'var(--font-heading)' }}>
-              Logged for {friendlyDate.toLowerCase()}
-            </h3>
-
-            {todaysEntries.length === 0 ? (
-              <div className="log-empty">
-                <div className="big">🍽️</div>
-                <h3>Empty plate</h3>
-                <p>Tap any dish above to log it. Breakfast counts too.</p>
-              </div>
-            ) : (
-              MEALS.map((meal) => {
-                const list = byMeal[meal.id];
-                if (list.length === 0) return null;
-                const mealTotal = list.reduce((s, e) => s + e.calories, 0);
-                return (
-                  <div key={meal.id} className="meal-section">
-                    <div className="meal-title">
-                      <h3>{meal.emoji} {meal.label}</h3>
-                      <span className="total">{mealTotal} kcal</span>
-                    </div>
-                    {list.map((e) => (
-                      <div key={e.id} className="log-entry">
-                        <span className="emoji">{e.emoji}</span>
-                        <div className="meta">
-                          <strong>{e.foodName}</strong>
-                          <span>
-                            {e.servings === 1 ? e.serving : `${e.servings}× ${e.serving}`}
-                            {' · '}
-                            C{e.carbs}g · P{e.protein}g · F{e.fat}g
-                          </span>
-                        </div>
-                        <span className="kcal">{e.calories} kcal</span>
-                        <button
-                          type="button"
-                          className="remove"
-                          onClick={() => removeEntry(e.id)}
-                          aria-label={`Remove ${e.foodName}`}
-                        >
-                          ✕
-                        </button>
+              ) : (
+                MEALS.map((meal) => {
+                  const list = byMeal[meal.id];
+                  if (list.length === 0) return null;
+                  const mealTotal = list.reduce((s, e) => s + e.calories, 0);
+                  return (
+                    <div key={meal.id} className="meal-section">
+                      <div className="meal-title">
+                        <h3>{meal.emoji} {meal.label}</h3>
+                        <span className="total">{mealTotal} kcal</span>
                       </div>
+                      {list.map((e) => (
+                        <div key={e.id} className="log-entry">
+                          <span className="emoji">{e.emoji}</span>
+                          <div className="meta">
+                            <strong>{e.foodName}</strong>
+                            <span>
+                              {e.servings === 1 ? e.serving : `${e.servings}× ${e.serving}`}
+                              {' · '}
+                              C{e.carbs}g · P{e.protein}g · F{e.fat}g
+                            </span>
+                          </div>
+                          <span className="kcal">{e.calories} kcal</span>
+                          <button
+                            type="button"
+                            className="remove"
+                            onClick={() => removeEntry(e.id)}
+                            aria-label={`Remove ${e.foodName}`}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* ADD A DISH — the food browser now lives below the log. */}
+            <div className="add-food">
+              <h3 className="add-food-title">Add a dish</h3>
+
+              <div className="search-wrap">
+                <span className="search-ico">🔍</span>
+                <input
+                  type="search"
+                  placeholder="Search dosa, dal, biryani, paratha..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  aria-label="Search foods"
+                />
+              </div>
+
+              <div className="category-pills">
+                {CATEGORIES.map((c) => {
+                  const isActive =
+                    c.id === 'all' ? categories.length === 0 : categories.includes(c.id);
+                  return (
+                    <button
+                      key={c.id}
+                      className={isActive ? 'active' : ''}
+                      aria-pressed={isActive}
+                      onClick={() => toggleCategory(c.id)}
+                    >
+                      {c.emoji} {c.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {filteredFoods.length > 0 && (
+                <>
+                  <div className="food-grid">
+                    {visibleFoods.map((f) => (
+                      <button key={f.id} className="food-card" onClick={() => openModal(f)}>
+                        <span className="food-emoji">{f.emoji}</span>
+                        <h4>{f.name}</h4>
+                        <span className="serving">{f.serving}</span>
+                        <span className="cal">
+                          <strong>{f.calories} kcal</strong>
+                          <span>C{f.carbs} P{f.protein} F{f.fat}</span>
+                        </span>
+                      </button>
                     ))}
                   </div>
-                );
-              })
-            )}
+                  {hasMore && (
+                    <div className="load-more-wrap">
+                      <button type="button" className="btn btn-ghost btn-sm" onClick={loadMore}>
+                        Load more ({filteredFoods.length - visibleCount} left)
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
+              {filteredFoods.length === 0 && (
+                <div className="log-empty">
+                  <div className="big">🔎</div>
+                  <h3>No matches</h3>
+                  <p>Try a different term, or help us add this dish from the contact page.</p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* SIDEBAR SUMMARY */}

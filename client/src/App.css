@@ -509,6 +509,16 @@ main { flex: 1; position: relative; }
 }
 .log-entry .remove:hover { color: var(--masala-500); background: rgba(220, 38, 38, 0.08); }
 
+/* Add-a-dish browser, separated from the log above it */
+.add-food {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.add-food-title { margin: 0 0 16px; font-family: var(--font-heading); }
+.add-food .food-grid { margin-bottom: 0; }
+.add-food .load-more-wrap { margin-bottom: 0; }
+
 /* Sidebar: daily summary */
 .summary {
   padding: 28px;
